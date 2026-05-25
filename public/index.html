@@ -136,19 +136,14 @@ tr:hover td { background: #f8f9fa; }
     <div class="card">
       <h2>📊 统计</h2>
       <div class="grid" id="statsGrid">
-        <div class="stat-box"><div class="num" id="statRecharge">0</div><div class="label">总充值</div></div>
-        <div class="stat-box"><div class="num" id="statDeduct">0</div><div class="label">总消费</div></div>
-        <div class="stat-box"><div class="num" id="statRechargeCount">0</div><div class="label">充值次数</div></div>
+        <div class="stat-box"><div class="num" id="statTotalPaid">0</div><div class="label">已支付总额</div></div>
+        <div class="stat-box"><div class="num" id="statTotalRefunded">0</div><div class="label">已退款总额</div></div>
+        <div class="stat-box"><div class="num" id="statPaidOrders">0</div><div class="label">已支付订单</div></div>
+        <div class="stat-box"><div class="num" id="statTotalOrders">0</div><div class="label">总订单数</div></div>
+        <div class="stat-box"><div class="num" id="statTotalDeduct">0</div><div class="label">总消费</div></div>
         <div class="stat-box"><div class="num" id="statDeductCount">0</div><div class="label">消费次数</div></div>
       </div>
       <button class="btn-outline" onclick="refreshStats()" style="margin-top:12px">🔄 刷新统计</button>
-    </div>
-
-    <!-- 充值记录 -->
-    <div class="card">
-      <h2>📋 充值记录</h2>
-      <div id="rechargeRecords"><div class="result-empty">暂无记录</div></div>
-      <button class="btn-outline" onclick="refreshRechargeRecords()" style="margin-top:8px">🔄 刷新</button>
     </div>
 
     <!-- 消费管理 -->
@@ -469,9 +464,11 @@ async function refreshStats() {
   const res = await fetch(`${BASE}/api/stats/${currentUserId}`);
   const data = await res.json();
   if (data.ok) {
-    document.getElementById('statRecharge').textContent = data.stats.totalRecharge.toFixed(2);
-    document.getElementById('statDeduct').textContent = data.stats.totalDeduction.toFixed(2);
-    document.getElementById('statRechargeCount').textContent = data.stats.rechargeCount;
+    document.getElementById('statTotalPaid').textContent = data.stats.totalPaid.toFixed(2);
+    document.getElementById('statTotalRefunded').textContent = data.stats.totalRefunded.toFixed(2);
+    document.getElementById('statPaidOrders').textContent = data.stats.paidOrderCount;
+    document.getElementById('statTotalOrders').textContent = data.stats.orderCount;
+    document.getElementById('statTotalDeduct').textContent = data.stats.totalDeduction.toFixed(2);
     document.getElementById('statDeductCount').textContent = data.stats.deductionCount;
   }
 }
@@ -689,7 +686,6 @@ function renderOrders(elId, data) {
 // ── 刷新增量 ──
 function refreshAll() {
   refreshBalance();
-  refreshRechargeRecords();
   refreshDeductRecords();
   refreshStats();
   refreshUserOrders();

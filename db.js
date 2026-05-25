@@ -388,22 +388,33 @@ function getCallbackLogsByOrder(orderId) {
 // ════════════════════════════════════════════════════════════════
 
 function getUserStats(userId) {
-  const totalRecharge = qGet(
-    "SELECT COALESCE(SUM(amount), 0) AS total FROM recharge_records WHERE user_id = ? AND status = 'completed'", [userId]
+  // 聚合支付统计（取代旧的充值记录）
+  const totalPaid = qGet(
+    "SELECT COALESCE(SUM(amount), 0) AS total FROM payment_orders WHERE user_id = ? AND status = 'paid'", [userId]
   );
+  const totalRefunded = qGet(
+    "SELECT COALESCE(SUM(amount), 0) AS total FROM payment_orders WHERE user_id = ? AND status = 'refunded'", [userId]
+  );
+  const paidOrderCount = qGet(
+    "SELECT COUNT(*) AS cnt FROM payment_orders WHERE user_id = ? AND status = 'paid'", [userId]
+  );
+  const orderCount = qGet("SELECT COUNT(*) AS cnt FROM payment_orders WHERE user_id = ?", [userId]);
+
+  // 消费统计（AI 消耗，保留）
   const totalDeduction = qGet(
     "SELECT COALESCE(SUM(amount), 0) AS total FROM deduction_records WHERE user_id = ?", [userId]
   );
-  const rechargeCount = qGet("SELECT COUNT(*) AS cnt FROM recharge_records WHERE user_id = ?", [userId]);
-  const deductionCount = qGet("SELECT COUNT(*) AS cnt FROM deduction_records WHERE user_id = ?", [userId]);
-  const orderCount = qGet("SELECT COUNT(*) AS cnt FROM payment_orders WHERE user_id = ?", [userId]);
+  const deductionCount = qGet(
+    "SELECT COUNT(*) AS cnt FROM deduction_records WHERE user_id = ?", [userId]
+  );
 
   return {
-    totalRecharge: totalRecharge?.total || 0,
-    totalDeduction: totalDeduction?.total || 0,
-    rechargeCount: rechargeCount?.cnt || 0,
-    deductionCount: deductionCount?.cnt || 0,
+    totalPaid: totalPaid?.total || 0,
+    totalRefunded: totalRefunded?.total || 0,
+    paidOrderCount: paidOrderCount?.cnt || 0,
     orderCount: orderCount?.cnt || 0,
+    totalDeduction: totalDeduction?.total || 0,
+    deductionCount: deductionCount?.cnt || 0,
   };
 }
 
