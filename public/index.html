@@ -96,6 +96,25 @@ tr:hover td { background: #f8f9fa; }
 </div>
 
 <div class="container" id="app">
+  <!-- ── 全局用户栏（所有 Tab 共享） ── -->
+  <div class="card" style="padding:16px">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="field" style="flex:1;min-width:120px">
+        <label>手机号</label>
+        <input type="text" id="phoneInput" placeholder="手机号" style="width:100%">
+      </div>
+      <div class="field" style="flex:1;min-width:120px">
+        <label>昵称（新用户可选）</label>
+        <input type="text" id="nicknameInput" placeholder="给自己起个名字" style="width:100%">
+      </div>
+      <button class="btn-primary" onclick="createUser()" style="margin-top:16px">创建/查找用户</button>
+      <button class="btn-outline" onclick="loadUserList()" style="margin-top:16px">📋 用户列表</button>
+    </div>
+    <div id="userInfo" style="display:none;padding:10px 14px;background:#e8f5e9;border-radius:8px;margin-top:10px;font-size:14px"></div>
+    <div id="userList" style="display:none;margin-top:8px"></div>
+    <div class="result" id="userResult" style="display:none;margin-top:8px"></div>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" data-tab="basic" onclick="switchTab('basic')">基础功能</button>
@@ -105,76 +124,12 @@ tr:hover td { background: #f8f9fa; }
 
   <!-- ══════════ Tab: 基础功能 ══════════ -->
   <div class="tab-panel active" id="tab-basic">
-    <!-- 当前用户 -->
-    <div class="card">
-      <h2>👤 当前用户</h2>
-      <div class="row">
-        <div class="field">
-          <label>手机号</label>
-          <input type="text" id="phoneInput" placeholder="手机号">
-        </div>
-        <div class="field">
-          <label>昵称（新用户可选）</label>
-          <input type="text" id="nicknameInput" placeholder="给自己起个名字">
-        </div>
-        <button class="btn-primary" onclick="createUser()">创建/查找用户</button>
-      </div>
-      <div id="userInfo" style="display:none;padding:10px 14px;background:#e8f5e9;border-radius:8px;margin-top:8px;font-size:14px"></div>
-      <div class="result" id="userResult" style="display:none"></div>
-      <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-        <button class="btn-outline" onclick="loadUserList()">📋 所有用户</button>
-        <span id="userCount" style="font-size:12px;color:#888"></span>
-      </div>
-      <div id="userList" style="display:none;margin-top:8px"></div>
-    </div>
-
     <!-- 余额 -->
     <div class="card">
       <h2>💰 余额</h2>
       <div id="currentBalance">-- <span id="balanceUnit">元</span></div>
       <div class="row" style="justify-content:center; gap:16px; margin-top:12px">
         <button class="btn-primary" onclick="refreshBalance()">🔄 刷新余额</button>
-      </div>
-    </div>
-
-    <!-- 操作 -->
-    <div class="card">
-      <h2>⚡ 内部操作</h2>
-      <div class="grid">
-        <div style="padding:8px; background:#f8f9fa; border-radius:8px">
-          <div style="font-size:13px;font-weight:600;margin-bottom:8px">💳 充值（直接加钱）</div>
-          <div class="field" style="margin-bottom:8px">
-            <label>金额（元）</label>
-            <input type="number" id="rechargeAmount" value="10" min="0.01" step="0.01">
-          </div>
-          <div class="field" style="margin-bottom:8px">
-            <label>方式</label>
-            <select id="rechargeMethod">
-              <option value="wechat">微信支付</option>
-              <option value="alipay">支付宝</option>
-              <option value="admin">管理员充值</option>
-            </select>
-          </div>
-          <button class="btn-success" onclick="doRecharge()" style="width:100%">充值</button>
-          <div class="result" id="rechargeResult" style="display:none;margin-top:8px"></div>
-        </div>
-        <div style="padding:8px; background:#f8f9fa; border-radius:8px">
-          <div style="font-size:13px;font-weight:600;margin-bottom:8px">📉 扣款（模拟AI消耗）</div>
-          <div class="field" style="margin-bottom:8px">
-            <label>金额（元）</label>
-            <input type="number" id="deductAmount" value="2" min="0.01" step="0.01">
-          </div>
-          <div class="field" style="margin-bottom:8px">
-            <label>模型</label>
-            <input type="text" id="deductModel" value="doubao-1.5" placeholder="模型名">
-          </div>
-          <div class="field" style="margin-bottom:8px">
-            <label>描述</label>
-            <input type="text" id="deductTask" value="屏幕分析" placeholder="任务描述">
-          </div>
-          <button class="btn-danger" onclick="doDeduct()" style="width:100%">扣款</button>
-          <div class="result" id="deductResult" style="display:none;margin-top:8px"></div>
-        </div>
       </div>
     </div>
 
