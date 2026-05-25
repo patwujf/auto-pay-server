@@ -273,6 +273,9 @@ function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
   document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
   document.getElementById(`tab-${name}`).classList.add('active');
+  // 切到基础功能时刷新数据，确保看到最新余额
+  if (name === 'basic') refreshAll();
+  if (name === 'payment') refreshAllOrders();
 }
 
 // ── 检查服务端连接 ──
