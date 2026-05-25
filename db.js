@@ -113,6 +113,9 @@ function initTables() {
     )
   `);
 
+  // ── 兼容旧数据库：添加可能缺失的列 ──
+  try { db.run("ALTER TABLE recharge_records ADD COLUMN order_id TEXT DEFAULT ''"); } catch {}
+
   // ── 消费记录表（AI任务消耗） ──
   db.run(`
     CREATE TABLE IF NOT EXISTS deduction_records (
